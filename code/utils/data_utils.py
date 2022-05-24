@@ -1,10 +1,12 @@
 import os
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 from .preprocessing import _resample
+from .data_augmentation import axangle2mat
 
 # Global sampling frequency
-Fs = 200.
+f_s = 200.
 
 def load_data(dir_name):
     
@@ -30,9 +32,9 @@ def load_data(dir_name):
             
             # Check sampling frequency
             df_channels = pd.read_csv(os.path.join(dir_name, sub_id, "motion", imu_channels_filename), sep="\t")
-            if df_channels["sampling_frequency"].iloc[0].astype("float") != Fs:
+            if df_channels["sampling_frequency"].iloc[0].astype("float") != f_s:
                 X = df_imu.to_numpy()
-                X = _resample(X, df_channels["sampling_frequency"].iloc[0].astype("float"), Fs)
+                X = _resample(X, df_channels["sampling_frequency"].iloc[0].astype("float"), f_s)
                 df_imu = pd.DataFrame(data=X, columns=df_imu.columns)
                 del X
         break
